@@ -8,8 +8,8 @@
 
 import Foundation
 
-// var  resultIsPending = false
-
+private var  resultIsPending: Bool = false
+//private var previousOp : previousOp = .clear
 class CalculatorBrain{
     
     private var trackingOperation : [String] = []
@@ -28,10 +28,16 @@ class CalculatorBrain{
         
         
     }
+ 
     
     var description : String{
         get{
-            return trackingString
+            if resultIsPending{
+                return trackingString + "..."
+            }else{
+                return trackingString
+            }
+            
         }
     }
     
@@ -42,8 +48,10 @@ class CalculatorBrain{
         trackingString = ""
         
     }
-    
-    
+   
+//    private func unaryPrint(_ symbol: String){
+//
+//        }
     
     private var operations: Dictionary<String, Operation> =
         [
@@ -87,12 +95,15 @@ class CalculatorBrain{
                 
             case .UnaryOperation(let function):
                 if accumulator != 0{
-                    accumulator = function(accumulator)
+                    accumulator =  function(accumulator)
+                   
+                    
                 }
                 trackingString += symbol
             case .BinaryOperation(let function):
                 if(accumulator != 0){
                     pbo = PendingBinaryOperation(function: function,firstOperand: accumulator)
+                    resultIsPending = true
                     trackingString += symbol
                 }
                 
@@ -101,12 +112,13 @@ class CalculatorBrain{
                 if(pbo != nil && accumulator != 0){
                     accumulator = pbo!.perform(with: accumulator)
                     pbo = nil
-                    
+                    resultIsPending = false
                     trackingString += symbol
                     
                     
                 }
             case .clear:
+                resultIsPending = false
                 clear()
                 
             }
@@ -121,8 +133,10 @@ class CalculatorBrain{
     
     
     public func setOperant(_ operand: Double){
+        
         accumulator = operand
         trackingString += String(format:"%2g",operand)
+        
         
     }
     
