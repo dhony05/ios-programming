@@ -8,14 +8,15 @@
 
 import Foundation
 
+
 private var  resultIsPending: Bool = false
-//private var previousOp : previousOp = .clear
+
 class CalculatorBrain{
-    
+    private var isOperation:Bool = false
     private var trackingOperation : [String] = []
     
     private var trackingString = ""
-    
+   
     private var accumulator = 0.0
     
     private enum Operation{
@@ -28,12 +29,13 @@ class CalculatorBrain{
         
         
     }
- 
-    
+
     var description : String{
         get{
             if resultIsPending{
                 return trackingString + "..."
+            }else if(isOperation){
+                return trackingString + "="
             }else{
                 return trackingString
             }
@@ -49,10 +51,7 @@ class CalculatorBrain{
         
     }
    
-//    private func unaryPrint(_ symbol: String){
-//
-//        }
-    
+
     private var operations: Dictionary<String, Operation> =
         [
             
@@ -87,24 +86,29 @@ class CalculatorBrain{
     public func performOperaton(_ symbol: String) {
         
         if let operation = operations[symbol]{
+            
             switch operation{
             case .Constant(let value):
                 trackingOperation.append(symbol)
                 accumulator = value
                 trackingString += symbol
+               
                 
             case .UnaryOperation(let function):
+
                 if accumulator != 0{
                     accumulator =  function(accumulator)
-                   
-                    
+                    if !trackingString.isEmpty{
+                        trackingString = symbol + "(" + trackingString + ")"
+                    }
+
                 }
-                trackingString += symbol
             case .BinaryOperation(let function):
                 if(accumulator != 0){
                     pbo = PendingBinaryOperation(function: function,firstOperand: accumulator)
                     resultIsPending = true
                     trackingString += symbol
+                    
                 }
                 
                 
@@ -113,12 +117,14 @@ class CalculatorBrain{
                     accumulator = pbo!.perform(with: accumulator)
                     pbo = nil
                     resultIsPending = false
-                    trackingString += symbol
+                    isOperation = true
+                    
                     
                     
                 }
             case .clear:
                 resultIsPending = false
+                isOperation = false
                 clear()
                 
             }
@@ -140,6 +146,14 @@ class CalculatorBrain{
         
     }
     
+    func setAccumulator(_ operand: Double) {
+        accumulator = operand
+    }
+    func setOperand(variable name: String){
+        trackingString += name
+        
+    }
+    
     var result: Double! {
         get {
             return accumulator
@@ -149,10 +163,6 @@ class CalculatorBrain{
         
         
     }
-    
-    
-    
-    
     
     
     

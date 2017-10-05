@@ -12,17 +12,48 @@ class ViewController: UIViewController {
     
     var userIsInTheMiddleOfTyping = false
     
-    
+     var variableM = [String: Double]()
     private var brain = CalculatorBrain()
     @IBOutlet weak var displayOperation: UILabel!
     
+    @IBOutlet weak var mlabel: UILabel!
+    var eme : String {
+        get {
+            return mlabel.text!
+        }
+        set {
+            mlabel.text! = "M:" + String(newValue)
+        }
+    }
     @IBOutlet weak var display: UILabel! // will unwrap every display
     
     
+    @IBAction func und0(_ sender: UIButton) {
+        if userIsInTheMiddleOfTyping,var inText = display.text{
+            inText .remove(at: inText.index(before: inText.endIndex))
+            if inText.isEmpty{
+              inText = "0"
+              userIsInTheMiddleOfTyping = false
+            }
+            display.text = inText
+    }
     
+    }
+  
+    @IBAction func m_setvariables(_ sender: UIButton) {
+        variableM["M"] = displayValue
+        eme = String(variableM["M"]!)
+        displayValue = 0.0
+        userIsInTheMiddleOfTyping = false
+    }
     
-    
-    
+    @IBAction func m_value(_ sender: UIButton) {
+        userIsInTheMiddleOfTyping = false
+        brain.setOperand(variable: "M")
+        brain.setAccumulator(variableM["M"]!)
+        displayOperation.text = brain.description
+        
+    }
     
     
     @IBAction func touchDigit(_ sender: UIButton) {
@@ -77,6 +108,7 @@ class ViewController: UIViewController {
     }
     
     
+   
     
     
     @IBAction func performOperation(_ sender: UIButton) {
@@ -85,19 +117,24 @@ class ViewController: UIViewController {
             userIsInTheMiddleOfTyping = false
             
         }
-        if let mathematicalSymbol = sender.currentTitle{
+         if let mathematicalSymbol = sender.currentTitle{
             brain.performOperaton(mathematicalSymbol)
             userIsInTheMiddleOfTyping = false
             
             
         }
-        if sender.currentTitle! == "C" {
+         if sender.currentTitle! == "C" {
             displayOperation.text = "0"
             displayValue = 0
+            mlabel.text = "0"
         }
-        else {
+            
+        
+        else  {
+            
             displayOperation.text = brain.description
             displayValue = brain.result
+            
         }
         
     }
