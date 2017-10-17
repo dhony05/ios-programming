@@ -12,7 +12,7 @@ class ViewController: UIViewController {
     
     var userIsInTheMiddleOfTyping = false
     
-     var variableM = [String: Double]()
+    var variableM = [String: Double]()
     private var brain = CalculatorBrain()
     @IBOutlet weak var displayOperation: UILabel!
     
@@ -43,21 +43,23 @@ class ViewController: UIViewController {
     @IBAction func m_setvariables(_ sender: UIButton) {
         variableM["M"] = displayValue
         eme = String(variableM["M"]!)
-        displayValue = 0.0
+        displayValue = 0
         userIsInTheMiddleOfTyping = false
     }
     
     @IBAction func m_value(_ sender: UIButton) {
         userIsInTheMiddleOfTyping = false
         brain.setOperand(variable: "M")
-        brain.setAccumulator(variableM["M"]!)
+        //if not set the value 
+        brain.setAccumulator(variableM["M"] ?? 0 )
         displayOperation.text = brain.description
+        
         
     }
     
     
     @IBAction func touchDigit(_ sender: UIButton) {
-        //userIsInTheMiddleOfTyping = true
+        
         
         
         let digit = sender.currentTitle!
@@ -122,6 +124,7 @@ class ViewController: UIViewController {
             userIsInTheMiddleOfTyping = false
             
             
+            
         }
          if sender.currentTitle! == "C" {
             displayOperation.text = "0"
@@ -131,7 +134,7 @@ class ViewController: UIViewController {
             
         
         else  {
-            
+           
             displayOperation.text = brain.description
             displayValue = brain.result
             

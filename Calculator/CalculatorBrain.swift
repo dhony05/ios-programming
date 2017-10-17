@@ -18,6 +18,8 @@ class CalculatorBrain{
     private var trackingString = ""
    
     private var accumulator = 0.0
+   
+    
     
     private enum Operation{
         case Constant(Double)
@@ -84,7 +86,6 @@ class CalculatorBrain{
     }
     private var pbo: PendingBinaryOperation?
     public func performOperaton(_ symbol: String) {
-        
         if let operation = operations[symbol]{
             
             switch operation{
@@ -96,15 +97,20 @@ class CalculatorBrain{
                 
             case .UnaryOperation(let function):
 
-                if accumulator != 0{
-                    accumulator =  function(accumulator)
-                    if !trackingString.isEmpty{
-                        trackingString = symbol + "(" + trackingString + ")"
-                    }
+                //if accumulator != 0{
+                   // if !trackingString.isEmpty{
+               
+                   trackingString = symbol + "(" + String(accumulator) + ")"
+                accumulator =  function(accumulator)
+                   
+                   
+                
+                //    }
 
-                }
+               // }
             case .BinaryOperation(let function):
-                if(accumulator != 0){
+              
+                if(accumulator != 0 ){
                     pbo = PendingBinaryOperation(function: function,firstOperand: accumulator)
                     resultIsPending = true
                     trackingString += symbol
