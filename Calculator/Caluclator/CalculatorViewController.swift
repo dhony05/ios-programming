@@ -27,7 +27,7 @@ class ViewController: UIViewController {
     }
     @IBOutlet weak var display: UILabel! // will unwrap every display
     
-    
+    //works as a backspace
     @IBAction func und0(_ sender: UIButton) {
         if userIsInTheMiddleOfTyping,var inText = display.text{
             inText .remove(at: inText.index(before: inText.endIndex))
